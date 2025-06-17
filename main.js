@@ -10,11 +10,11 @@ const TOKEN = process.env.TOKEN;
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 client.commands = new Collection();
-const foldersPath = path.join(__dirname, 'commands');
-const commandFolders = fs.readdirSync(foldersPath);
+const commandPath = path.join(__dirname, 'commands');
+const commandFolders = fs.readdirSync(commandPath);
 
 for (const folder of commandFolders) {
-	const commandsPath = path.join(foldersPath, folder);
+	const commandsPath = path.join(commandPath, folder);
 	const commandsFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
 	for (const file of commandsFiles) {

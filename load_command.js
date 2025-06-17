@@ -38,14 +38,14 @@ const rest = new REST().setToken(TOKEN);
 
 (async () => {
 	try {
-		console.log(`Refreshing ${command_list.length}.`);
+		console.log(`Refreshing ${command_list.length} command(s).`);
 
 		const data = await rest.put(
 			Routes.applicationGuildCommands(CLIENT_ID, SERVER_ID),
 			{ body: command_list },
 		);
 
-		console.log(`${data.length} loaded successfully`);
+		console.log(`${data.length} command(s) loaded successfully`);
 	}
 	catch (error) {
 		console.error(error);
