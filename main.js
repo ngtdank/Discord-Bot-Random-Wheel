@@ -1,6 +1,6 @@
 const fs = require('node:fs');
 const path = require('node:path');
-const { Client, GatewayIntentBits, Collection } = require('discord.js');
+const { Client, Collection, GatewayIntentBits } = require('discord.js');
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -9,25 +9,21 @@ const TOKEN = process.env.TOKEN;
 // Guilds == Discord server
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
+// Command list
 client.commands = new Collection();
+
 const commandPath = path.join(__dirname, 'commands');
-const commandFolders = fs.readdirSync(commandPath);
+const commandFiles = fs.readdirSync(commandPath).filter(file => file.endsWith('.js'));
 
-for (const folder of commandFolders) {
-	const commandsPath = path.join(commandPath, folder);
-	const commandsFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
-
-	for (const file of commandsFiles) {
-		const filePath = path.join (commandsPath, file);
-		const command = require(filePath);
-
-		// prevent error from unfinished command from executing
-		if ('data' in command && 'execute' in command) {
-			client.commands.set(command.data.name, command);
-		}
-		else {
-			console.log(`!!! Missing command at ${filePath} !!!`);
-		}
+for (const file of commandFiles) {
+	const filePath = path.join(commandPath, file);
+	const command = require(filePath);
+	// prevent error from unfinished command from executing
+	if ('data' in command && 'execute' in command) {
+		client.commands.set(command.data.name, command);
+	}
+	else {
+		console.log(`!!! Missing property at command ${filePath} !!!`);
 	}
 }
 

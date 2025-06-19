@@ -13,26 +13,20 @@ const CLIENT_ID = process.env.CLIENT_ID;
 // Command list
 const command_list = [];
 
-const foldersPath = path.join(__dirname, 'commands');
-const commandFolders = fs.readdirSync(foldersPath);
+const commandsPath = path.join(__dirname, 'commands');
+const commandsFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
-for (const folder of commandFolders) {
-	const commandsPath = path.join(foldersPath, folder);
-	const commandsFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
-
-	for (const file of commandsFiles) {
-		const filePath = path.join (commandsPath, file);
-		const command = require(filePath);
-		// prevent error from unfinished command from executing
-		if ('data' in command && 'execute' in command) {
-			command_list.push(command.data.toJSON());
-		}
-		else {
-			console.log(`!!! Missing property at command ${filePath} !!!`);
-		}
+for (const file of commandsFiles) {
+	const filePath = path.join(commandsPath, file);
+	const command = require(filePath);
+	// prevent error from unfinished command from executing
+	if ('data' in command && 'execute' in command) {
+		command_list.push(command.data.toJSON());
+	}
+	else {
+		console.log(`!!! Missing property at command ${filePath} !!!`);
 	}
 }
-
 
 const rest = new REST().setToken(TOKEN);
 
