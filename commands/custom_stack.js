@@ -1,6 +1,13 @@
+const path = require('node:path');
 const { SlashCommandBuilder, ActionRowBuilder, UserSelectMenuBuilder, ComponentType } = require('discord.js');
 
+const utilPath = path.join(__dirname, 'utility');
+const embedPath = path.join(utilPath, 'embed_layout.js');
+
+const embed = require(embedPath);
+
 module.exports = {
+
 	data: new SlashCommandBuilder()
 		.setName('custom_stack')
 		.setDescription('Create randomized custom game stack'),
@@ -25,7 +32,20 @@ module.exports = {
 			return i.user.id === interaction.user.id;
 		};
 
-		message.awaitMessageComponent({ filter: collectorFilter, ComponentType: ComponentType.UserSelect, time: 60_000 })
-			.then(async i => await i.followUp(`${i.values.join(', ')}`));
+		const create_name_list = 
+
+		message.awaitMessageComponent({
+			filter: collectorFilter,
+			ComponentType: ComponentType.UserSelect,
+			time: 60_000 })
+			.then(i => {
+
+				for (const snowflake_id of i.values) {
+					returni.users.get(snowflake_id).globalName);
+				}
+			})
+			.then(console.log(name_list))
+			.then(i => i.followUp({ embeds: [embed] }))
+			.catch(error => console.log(`${error}. No interactions were collected.`));
 	},
 };
